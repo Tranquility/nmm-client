@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import android.os.AsyncTask;
 
 public class Manager {
+	
 	private BoardActivity _board;
 
 	public Manager() {

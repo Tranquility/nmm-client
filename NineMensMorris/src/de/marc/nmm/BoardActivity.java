@@ -10,7 +10,7 @@ public class BoardActivity extends Activity {
 
 	private Position _a1, _a4, _a7, _b2, _b4, _b6, _c3, _c4, _c5, _d1, _d2,
 			_d3, _d5, _d6, _d7, _e3, _e4, _e5, _f2, _f4, _f6, _g1, _g4, _g7;
-	
+
 	private ObservableState _currentState;
 	private ObservableState _lastState;
 	private ObservableState _stateWait;
@@ -31,32 +31,45 @@ public class BoardActivity extends Activity {
 		getMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
 	}
-	
+
+	/**
+	 * Registers the observers that have to be notified if the game is in a
+	 * state where the player is waiting for the opponent.
+	 */
 	public void registerGetObserver(StateObserver so) {
 		_stateWait.registerObserver(so);
 	}
-	
+
+	/**
+	 * Registers the observers that have to be notified if the game is in a
+	 * state where the player has made a valid move.
+	 * 
+	 * @param so
+	 */
 	public void registerPostObserver(StateObserver so) {
 		_statePutting.registerObserver(so);
 		_stateMoving.registerObserver(so);
 		_stateFlying.registerObserver(so);
 	}
-	
+
 	public void move(JSONObject o) {
-		//TODO: Do something with o after the strucuture of a json move object is determined
-		// It may be necessary to change the move method of the abstract class ObservableState
+		// TODO: Do something with o after the strucuture of a json move object
+		// is determined
+		// It may be necessary to change the move method of the abstract class
+		// ObservableState
 		_currentState.move();
 	}
+
 	
 	public void waitState() {
 		_lastState = _currentState;
 		_currentState = _stateWait;
 	}
-	
+
 	private void initializeStates() {
 		_stateWait = new GameStateWaiting();
 		_statePutting = new GameStatePutting();
-		_stateMoving =  new GameStateMoving();
+		_stateMoving = new GameStateMoving();
 		_stateFlying = new GameStateFlying();
 	}
 
@@ -87,6 +100,10 @@ public class BoardActivity extends Activity {
 		_g7 = new Position("g7", null, null, _g4, _d7);
 	}
 
+	/**
+	 * This state is active while the player is waiting for the opponents move.
+	 * During this state the player cannot move or put any of his stones.
+	 */
 	class GameStateWaiting extends ObservableState {
 
 		@Override
@@ -105,6 +122,12 @@ public class BoardActivity extends Activity {
 		}
 	}
 
+	/**
+	 * This state is active during the first phase of the game. The player can
+	 * place each of his 9 stones on any free spot on the board. The two players
+	 * are alternately placing their stones, therefore the GameStateWait is
+	 * activated after each move.
+	 */
 	class GameStatePutting extends ObservableState {
 
 		@Override
@@ -124,6 +147,12 @@ public class BoardActivity extends Activity {
 		}
 	}
 
+	/**
+	 * This state is active during the second phase. The player can move his
+	 * stones from one spot to the next, but only along the board lines. The two
+	 * players are alternately placing their stones, therefore the GameStateWait
+	 * is activated after each move.
+	 */
 	class GameStateMoving extends ObservableState {
 
 		@Override
@@ -143,6 +172,10 @@ public class BoardActivity extends Activity {
 		}
 	}
 
+	/**
+	 * This state is active during the third phase. The player has only three
+	 * stones left, but can place them on any available spot.
+	 */
 	class GameStateFlying extends ObservableState {
 
 		@Override
