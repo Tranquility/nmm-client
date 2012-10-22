@@ -1,7 +1,6 @@
 package de.marc.nmm;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -14,7 +13,10 @@ public class BoardActivity extends Activity {
 	
 	private ObservableState _currentState;
 	private ObservableState _lastState;
-	private List<ObservableState> _allStates;
+	private ObservableState _stateWait;
+	private ObservableState _statePutting;
+	private ObservableState _stateMoving;
+	private ObservableState _stateFlying;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -24,25 +26,38 @@ public class BoardActivity extends Activity {
 		initializeField();
 	}
 
-	private void initializeStates() {
-		_allStates = new ArrayList<ObservableState>();
-		_allStates.add(new GameStateWaiting());
-		_allStates.add(new GameStatePutting());
-		_allStates.add(new GameStateMoving());
-		_allStates.add(new GameStateFlying());
-		_lastState = _allStates.get(0);
-	}
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
 	}
 	
-	public void registerStateObserver(StateObserver so) {
-		for (ObservableState os : _allStates) {
-			os.registerObserver(so);
-		}
+	public void registerGetObserver(StateObserver so) {
+		_stateWait.registerObserver(so);
+	}
+	
+	public void registerPostObserver(StateObserver so) {
+		_statePutting.registerObserver(so);
+		_stateMoving.registerObserver(so);
+		_stateFlying.registerObserver(so);
+	}
+	
+	public void move(JSONObject o) {
+		//TODO: Do something with o after the strucuture of a json move object is determined
+		// It may be necessary to change the move method of the abstract class ObservableState
+		_currentState.move();
+	}
+	
+	public void waitState() {
+		_lastState = _currentState;
+		_currentState = _stateWait;
+	}
+	
+	private void initializeStates() {
+		_stateWait = new GameStateWaiting();
+		_statePutting = new GameStatePutting();
+		_stateMoving =  new GameStateMoving();
+		_stateFlying = new GameStateFlying();
 	}
 
 	private void initializeField() {
@@ -86,7 +101,7 @@ public class BoardActivity extends Activity {
 
 		@Override
 		public void next() {
-
+			_currentState = _lastState;
 		}
 	}
 
@@ -104,7 +119,8 @@ public class BoardActivity extends Activity {
 
 		@Override
 		public void next() {
-
+			_currentState = _stateWait;
+			_lastState = this;
 		}
 	}
 
@@ -122,7 +138,8 @@ public class BoardActivity extends Activity {
 
 		@Override
 		public void next() {
-
+			_currentState = _stateWait;
+			_lastState = this;
 		}
 	}
 
@@ -140,7 +157,8 @@ public class BoardActivity extends Activity {
 
 		@Override
 		public void next() {
-
+			_currentState = _stateWait;
+			_lastState = this;
 		}
 	}
 }
