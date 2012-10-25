@@ -1,4 +1,4 @@
-package de.marc.nmm;
+package com.boardgames.nmm;
 
 import java.io.BufferedReader;
 import java.io.InputStream;

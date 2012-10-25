@@ -1,4 +1,4 @@
-package de.marc.nmm;
+package com.boardgames.nmm;
 
 import org.json.JSONArray;
 import org.json.JSONException;

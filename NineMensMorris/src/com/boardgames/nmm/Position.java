@@ -1,4 +1,4 @@
-package de.marc.nmm;
+package com.boardgames.nmm;
 
 public class Position {
 

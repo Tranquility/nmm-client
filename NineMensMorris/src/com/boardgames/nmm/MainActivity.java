@@ -1,5 +1,6 @@
-package de.marc.nmm;
+package com.boardgames.nmm;
 
+import de.marc.nmm.R;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
