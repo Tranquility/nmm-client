@@ -47,7 +47,7 @@ public class Manager {
 			@Override
 			protected Boolean doInBackground(Void... params) {
 				String url = "http://nmm.ole-reifschneider.de/moves.json";
-				return PostRequest.postJson(url, o);
+				return NetworkManager.postJson(url, o);
 			}
 		}.execute();
 	}
@@ -63,7 +63,7 @@ public class Manager {
 			@Override
 			protected JSONArray doInBackground(Void... params) {
 				String url = "http://nmm.ole-reifschneider.de/moves.json";
-				return GetRequest.getJson(url);
+				return NetworkManager.getJson(url);
 			}
 
 			protected void onPostExecute(JSONArray result) {
