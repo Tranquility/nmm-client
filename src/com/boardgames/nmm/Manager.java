@@ -1,5 +1,8 @@
 package com.boardgames.nmm;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -7,7 +10,7 @@ import org.json.JSONObject;
 import android.os.AsyncTask;
 
 public class Manager {
-	
+
 	private BoardActivity _board;
 
 	public Manager() {
@@ -52,27 +55,36 @@ public class Manager {
 		}.execute();
 	}
 
+	public void getLatestMove() {
+		Timer timer;
+		timer = new Timer();
+		timer.schedule(new PullDaemon(), 0, 5 * 1000);
+	}
+
 	/**
 	 * This methods initiates a GET request to fetch the opponents latest move
 	 * from the server.
 	 */
-	private void getLatestMove() {
+	class PullDaemon extends TimerTask {
 		
-		new AsyncTask<Void, Void, JSONArray>() {
+		public void run() {
+			
+			new AsyncTask<Void, Void, JSONArray>() {
 
-			@Override
-			protected JSONArray doInBackground(Void... params) {
-				String url = "http://nmm.ole-reifschneider.de/moves.json";
-				return NetworkManager.getJson(url);
-			}
-
-			protected void onPostExecute(JSONArray result) {
-				try {
-					_board.move(result.getJSONObject(0));
-				} catch (JSONException e) {
-					e.printStackTrace();
+				@Override
+				protected JSONArray doInBackground(Void... params) {
+					String url = "http://nmm.ole-reifschneider.de/moves.json";
+					return NetworkManager.getJson(url);
 				}
-			}
-		}.execute();
+
+				protected void onPostExecute(JSONArray result) {
+					try {
+						_board.move(result.getJSONObject(0));
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+				}
+			}.execute();
+		}
 	}
 }
