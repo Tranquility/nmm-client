@@ -84,7 +84,10 @@ public class Manager {
 
 				protected void onPostExecute(JSONArray result) {
 					try {
-						_board.move(result.getJSONObject(0));
+						if (!result.isNull(0)) {
+							MoveConverter mc = new MoveConverter(result.getJSONObject(0));
+							_board.move(mc.oldField(), mc.newField(), mc.playerId());
+						}
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
