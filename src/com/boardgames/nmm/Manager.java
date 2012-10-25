@@ -55,17 +55,22 @@ public class Manager {
 		}.execute();
 	}
 
+  /**
+   * Starts a timer that creates a new GetRequest 
+   * that checks for changes on the server
+   */
+
 	public void getLatestMove() {
 		Timer timer;
 		timer = new Timer();
-		timer.schedule(new PullDaemon(), 0, 5 * 1000);
+		timer.schedule(new GetRequest(), 0, 5 * 1000);
 	}
 
 	/**
 	 * This methods initiates a GET request to fetch the opponents latest move
 	 * from the server.
 	 */
-	class PullDaemon extends TimerTask {
+	class GetRequest extends TimerTask {
 		
 		public void run() {
 			
