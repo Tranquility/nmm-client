@@ -10,10 +10,47 @@ public class BoardView extends View {
 	private int _height;
 	private int _width;
 	private Paint _paint;
+	private final int _size = 10;
+
+	Colors[][] _blackStone = {
+			{ Colors.TRANSPARENT, Colors.TRANSPARENT, Colors.WHITE,
+					Colors.WHITE, Colors.WHITE, Colors.TRANSPARENT,
+					Colors.TRANSPARENT },
+			{ Colors.TRANSPARENT, Colors.WHITE, Colors.BLACK, Colors.BLACK,
+					Colors.BLACK, Colors.WHITE, Colors.TRANSPARENT },
+			{ Colors.WHITE, Colors.BLACK, Colors.BLACK, Colors.BLACK,
+					Colors.BLACK, Colors.BLACK, Colors.WHITE },
+			{ Colors.WHITE, Colors.BLACK, Colors.BLACK, Colors.BLACK,
+					Colors.BLACK, Colors.BLACK, Colors.WHITE },
+			{ Colors.WHITE, Colors.BLACK, Colors.BLACK, Colors.BLACK,
+					Colors.BLACK, Colors.BLACK, Colors.WHITE },
+			{ Colors.TRANSPARENT, Colors.WHITE, Colors.BLACK, Colors.BLACK,
+					Colors.BLACK, Colors.WHITE, Colors.TRANSPARENT },
+			{ Colors.TRANSPARENT, Colors.TRANSPARENT, Colors.WHITE,
+					Colors.WHITE, Colors.WHITE, Colors.TRANSPARENT,
+					Colors.TRANSPARENT } };
+
+	Colors[][] _whiteStone = {
+			{ Colors.TRANSPARENT, Colors.TRANSPARENT, Colors.BLACK,
+					Colors.BLACK, Colors.BLACK, Colors.TRANSPARENT,
+					Colors.TRANSPARENT },
+			{ Colors.TRANSPARENT, Colors.BLACK, Colors.WHITE, Colors.WHITE,
+					Colors.WHITE, Colors.BLACK, Colors.TRANSPARENT },
+			{ Colors.BLACK, Colors.WHITE, Colors.WHITE, Colors.WHITE,
+					Colors.WHITE, Colors.WHITE, Colors.BLACK },
+			{ Colors.BLACK, Colors.WHITE, Colors.WHITE, Colors.WHITE,
+					Colors.WHITE, Colors.WHITE, Colors.BLACK },
+			{ Colors.BLACK, Colors.WHITE, Colors.WHITE, Colors.WHITE,
+					Colors.WHITE, Colors.WHITE, Colors.BLACK },
+			{ Colors.TRANSPARENT, Colors.BLACK, Colors.WHITE, Colors.WHITE,
+					Colors.WHITE, Colors.BLACK, Colors.TRANSPARENT },
+			{ Colors.TRANSPARENT, Colors.TRANSPARENT, Colors.BLACK,
+					Colors.BLACK, Colors.BLACK, Colors.TRANSPARENT,
+					Colors.TRANSPARENT } };
 
 	public BoardView(Context context) {
 		super(context);
-		setBackgroundColor(Colors.WHITE.getColor());
+		setBackgroundColor(Colors.TAN.getColor());
 		_paint = new Paint();
 	}
 
@@ -30,21 +67,22 @@ public class BoardView extends View {
 
 	@Override
 	/**
-	 * Paints the view
+	 * Paints the view.
 	 */
 	protected void onDraw(Canvas canvas) {
 		drawField(canvas);
-
+		drawStone(canvas, _width * 0.075f, _width * 0.075f, _blackStone);
+		drawStone(canvas, _width * 0.925f, _width * 0.925f, _whiteStone);
 	}
 
 	/**
-	 * @param canvas
+	 * Draws the field on the canvas.
 	 */
 	private void drawField(Canvas canvas) {
 		_paint.setColor(Colors.BLACK.getColor());
-		_paint.setStrokeWidth(3);
+		_paint.setStrokeWidth(6);
 		_paint.setStyle(Paint.Style.STROKE);
-		
+
 		// Draw outer rectangle
 		float oLength = _width * 0.85f;
 		float oStart = (_width - oLength) / 2f;
@@ -73,5 +111,20 @@ public class BoardView extends View {
 				/ 2f, _paint);
 		canvas.drawLine(oStart + oLength / 2f, iStop, oStart + oLength / 2f,
 				oStop, _paint);
+	}
+
+	private void drawStone(Canvas canvas, float centerX, float centerY, Colors[][] stone) {
+		_paint.setStyle(Paint.Style.FILL);
+		float offsetX = centerX - (_size * stone.length / 2f);
+		float offsetY = centerY - (_size * stone.length / 2f);
+
+		for (int i = 0; i < stone.length; ++i) {
+			for (int j = 0; j < stone.length; ++j) {
+				int color = stone[i][j].getColor();
+				_paint.setColor(color);
+				canvas.drawRect(offsetX + i * _size, offsetY + j * _size, offsetX
+						+ (i + 1) * _size, offsetY + (j + 1) * _size, _paint);
+			}
+		}
 	}
 }
