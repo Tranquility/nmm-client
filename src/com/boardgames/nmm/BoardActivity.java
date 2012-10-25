@@ -2,7 +2,7 @@ package com.boardgames.nmm;
 
 import org.json.JSONObject;
 
-import de.marc.nmm.R;
+import com.boardgames.nmm.R;
 
 import android.app.Activity;
 import android.os.Bundle;
