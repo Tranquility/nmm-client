@@ -20,6 +20,13 @@ public class RegistrationActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_registration);
 
+		setupButton();
+	}
+
+	/**
+	 * Adds an onclick listener to the button
+	 */
+	private void setupButton() {
 		Button btn = (Button) findViewById(R.id.button_createAcc);
 		btn.setOnClickListener(new OnClickListener() {
 			@Override
@@ -39,7 +46,6 @@ public class RegistrationActivity extends Activity {
 				}
 			}
 		});
-
 	}
 
 	/**
