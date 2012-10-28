@@ -54,8 +54,8 @@ public class NetworkManager {
 	 * @param url
 	 *            The URL where the client wants to post JSON Strings
 	 * @param object
-	 *            The JSON String
-	 * @return True if the request was successful, false otherwise
+	 *            The JSON object
+	 * @return JSONObject with the response from the server
 	 */
 	public static JSONObject postJson(String url, JSONObject object) {
 		JSONObject result = new JSONObject();

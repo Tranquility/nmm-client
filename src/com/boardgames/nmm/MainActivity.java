@@ -16,17 +16,15 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		OnClickListener listener = new OnClickListener() {
+		Button btn = (Button) findViewById(R.id.button1);
+		btn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(getApplicationContext(),
 						RegistrationActivity.class);
 				startActivity(intent);
 			}
-		};
-
-		Button btn = (Button) findViewById(R.id.button1);
-		btn.setOnClickListener(listener);
+		});
 	}
 
 	@Override

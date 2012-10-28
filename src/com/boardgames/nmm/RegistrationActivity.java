@@ -20,7 +20,8 @@ public class RegistrationActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_registration);
 
-		OnClickListener listener = new OnClickListener() {
+		Button btn = (Button) findViewById(R.id.button_createAcc);
+		btn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				EditText emailEdit = (EditText) findViewById(R.id.register_email);
@@ -37,12 +38,16 @@ public class RegistrationActivity extends Activity {
 					e.printStackTrace();
 				}
 			}
-		};
-
-		Button btn = (Button) findViewById(R.id.button_createAcc);
-		btn.setOnClickListener(listener);
+		});
 
 	}
+
+	/**
+	 * Executes a post request in background and evaluates the response from the
+	 * server
+	 * 
+	 * @param JSONObject
+	 */
 
 	private void postData(final JSONObject o) {
 
