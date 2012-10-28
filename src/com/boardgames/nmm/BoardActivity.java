@@ -1,7 +1,5 @@
 package com.boardgames.nmm;
 
-import org.json.JSONObject;
-
 import com.boardgames.nmm.R;
 
 import android.app.Activity;
@@ -54,12 +52,11 @@ public class BoardActivity extends Activity {
 		_stateFlying.registerObserver(so);
 	}
 
-	public void move(JSONObject o) {
-		// TODO: Do something with o after the strucuture of a json move object
-		// is determined
+	public void move(String oldField, String newField, int playerId) {
+		// TODO: Do something with the data
 		// It may be necessary to change the move method of the abstract class
 		// ObservableState
-		_currentState.move();
+		_currentState.move(oldField, newField, playerId);
 	}
 
 	
@@ -114,7 +111,7 @@ public class BoardActivity extends Activity {
 		}
 
 		@Override
-		public void move() {
+		public void move(String oldField, String newField, int playerId) {
 
 		}
 
@@ -138,7 +135,7 @@ public class BoardActivity extends Activity {
 		}
 
 		@Override
-		public void move() {
+		public void move(String oldField, String newField, int playerId) {
 
 		}
 
@@ -163,7 +160,7 @@ public class BoardActivity extends Activity {
 		}
 
 		@Override
-		public void move() {
+		public void move(String oldField, String newField, int playerId) {
 
 		}
 
@@ -186,7 +183,7 @@ public class BoardActivity extends Activity {
 		}
 
 		@Override
-		public void move() {
+		public void move(String oldField, String newField, int playerId) {
 
 		}
 

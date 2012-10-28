@@ -12,6 +12,7 @@ import android.os.AsyncTask;
 public class Manager {
 
 	private BoardActivity _board;
+	private Timer timer;
 
 	public Manager() {
 		_board = new BoardActivity();
@@ -61,7 +62,6 @@ public class Manager {
    */
 
 	public void getLatestMove() {
-		Timer timer;
 		timer = new Timer();
 		timer.schedule(new GetRequest(), 0, 5 * 1000);
 	}
@@ -84,7 +84,11 @@ public class Manager {
 
 				protected void onPostExecute(JSONArray result) {
 					try {
-						_board.move(result.getJSONObject(0));
+						if (!result.isNull(0)) {
+							MoveConverter mc = new MoveConverter(result.getJSONObject(0));
+							_board.move(mc.oldField(), mc.newField(), mc.playerId());
+							timer.cancel();
+						}
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
