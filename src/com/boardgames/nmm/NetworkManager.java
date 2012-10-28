@@ -7,7 +7,6 @@ import java.io.InputStreamReader;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -15,6 +14,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class NetworkManager {
@@ -47,18 +47,18 @@ public class NetworkManager {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Executes a POST request to a given URL with a given JSONObject.
 	 * 
 	 * @param url
 	 *            The URL where the client wants to post JSON Strings
 	 * @param object
-	 *            The JSON String
-	 * @return True if the request was successful, false otherwise
+	 *            The JSON object
+	 * @return JSONObject with the response from the server
 	 */
-	public static boolean postJson(String url, JSONObject object) {
-		boolean result = false;
+	public static JSONObject postJson(String url, JSONObject object) {
+		JSONObject result = new JSONObject();
 		try {
 			DefaultHttpClient client = new DefaultHttpClient();
 			HttpPost post = new HttpPost(url);
@@ -69,9 +69,18 @@ public class NetworkManager {
 			post.setHeader("Content-type", "application/json");
 
 			HttpResponse response = client.execute(post);
-			int status = response.getStatusLine().getStatusCode();
-			result = status == HttpStatus.SC_OK;
 
+			InputStream content = response.getEntity().getContent();
+			InputStreamReader streamReader = new InputStreamReader(content);
+			BufferedReader bufferedReader = new BufferedReader(streamReader);
+
+			String line = bufferedReader.readLine();
+			try {
+				result = new JSONObject(line);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
