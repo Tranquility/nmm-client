@@ -46,10 +46,10 @@ public class Manager {
 	 */
 	private void postLatestMove(final JSONObject o) {
 
-		new AsyncTask<Void, Void, Boolean>() {
+		new AsyncTask<Void, Void, JSONObject>() {
 
 			@Override
-			protected Boolean doInBackground(Void... params) {
+			protected JSONObject doInBackground(Void... params) {
 				String url = "http://nmm.ole-reifschneider.de/moves.json";
 				return NetworkManager.postJson(url, o);
 			}
