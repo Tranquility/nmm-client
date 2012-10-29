@@ -7,6 +7,7 @@ import android.view.View;
 
 public class BoardView extends View {
 
+	private Board _board;
 	private int _height;
 	private int _width;
 	private Paint _paint;
@@ -48,10 +49,11 @@ public class BoardView extends View {
 					Colors.BLACK, Colors.BLACK, Colors.TRANSPARENT,
 					Colors.TRANSPARENT } };
 
-	public BoardView(Context context) {
+	public BoardView(Context context, Board board) {
 		super(context);
 		setBackgroundColor(Colors.TAN.getColor());
 		_paint = new Paint();
+		_board = board;
 	}
 
 	@Override

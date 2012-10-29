@@ -25,7 +25,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="RegistrationActivity"></activity>
+        <activity 
+            android:name="RegistrationActivity"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="portrait" />
+        <activity 
+            android:name="BoardActivity"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

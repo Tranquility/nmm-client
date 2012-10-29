@@ -20,13 +20,13 @@ public class RegistrationActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_registration);
 
-		setupButton();
+		addCreateButtonListener();
 	}
 
 	/**
-	 * Adds an onclick listener to the button
+	 * Adds a listener to the button that sends the "create account" request
 	 */
-	private void setupButton() {
+	private void addCreateButtonListener() {
 		Button btn = (Button) findViewById(R.id.button_createAcc);
 		btn.setOnClickListener(new OnClickListener() {
 			@Override
@@ -54,7 +54,6 @@ public class RegistrationActivity extends Activity {
 	 * 
 	 * @param JSONObject
 	 */
-
 	private void postData(final JSONObject o) {
 
 		new AsyncTask<Void, Void, JSONObject>() {
