@@ -30,7 +30,7 @@ public class MainActivity extends Activity {
 	 * Adds a listener to the button that opens the registration.
 	 */
 	private void addRegisterButtonListener() {
-		Button regButton = (Button) findViewById(R.id.button1);
+		Button regButton = (Button) findViewById(R.id.button_signup);
 		regButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -45,7 +45,7 @@ public class MainActivity extends Activity {
 	 * Adds a listener to the button that starts the game.
 	 */
 	private void addStartButtonListener() {
-		Button startButton = (Button) findViewById(R.id.button2);
+		Button startButton = (Button) findViewById(R.id.button_startgame);
 		startButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
