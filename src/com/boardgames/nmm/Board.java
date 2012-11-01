@@ -1,6 +1,5 @@
 package com.boardgames.nmm;
 
-
 public class Board {
 
 	private Position[][] _positions;
@@ -44,6 +43,10 @@ public class Board {
 		_currentState.move(oldField, newField, playerId);
 	}
 
+	public void pick(int x, int y) {
+		_currentState.pick(x, y);
+	}
+
 	public Position[][] getPositions() {
 		return _positions;
 	}
@@ -58,6 +61,7 @@ public class Board {
 		_statePutting = new GameStatePutting();
 		_stateMoving = new GameStateMoving();
 		_stateFlying = new GameStateFlying();
+		_currentState = _statePutting;
 	}
 
 	private void initializeField() {
@@ -97,17 +101,22 @@ public class Board {
 				{ g1, null, null, g4, null, null, g7 } };
 
 	}
+	
+	/**
+	 * Checks if a given coordinate is a valid Position. It is valid if it
+	 * is within the array boundaries and not null.
+	 */
+	private boolean isPositionValid(int x, int y) {
+		if (x < _positions.length && y < _positions.length)
+			return _positions[x][y] != null;
+		return false;
+	}
 
 	/**
 	 * This state is active while the player is waiting for the opponents move.
 	 * During this state the player cannot move or put any of his stones.
 	 */
 	class GameStateWaiting extends ObservableState {
-
-		@Override
-		public void onTouch() {
-
-		}
 
 		@Override
 		public void move(String oldField, String newField, int playerId) {
@@ -117,6 +126,12 @@ public class Board {
 		@Override
 		public void next() {
 			_currentState = _lastState;
+		}
+
+		@Override
+		public void pick(int x, int y) {
+			// TODO Auto-generated method stub
+
 		}
 	}
 
@@ -128,20 +143,29 @@ public class Board {
 	 */
 	class GameStatePutting extends ObservableState {
 
-		@Override
-		public void onTouch() {
-
-		}
+		private int _to;
 
 		@Override
 		public void move(String oldField, String newField, int playerId) {
-
+			int x = _to / 10;
+			int y = _to % 10;
+			_positions[x][y].setStone(Stone.BLACK);
 		}
 
 		@Override
 		public void next() {
 			_currentState = _stateWait;
 			_lastState = this;
+		}
+
+		@Override
+		public void pick(int x, int y) {
+			if (isPositionValid(x, y)) {
+				if (_positions[x][y].isEmpty()) {
+					_to = x * 10 + y;
+					move(null, null, 0);
+				}
+			}
 		}
 	}
 
@@ -154,11 +178,6 @@ public class Board {
 	class GameStateMoving extends ObservableState {
 
 		@Override
-		public void onTouch() {
-
-		}
-
-		@Override
 		public void move(String oldField, String newField, int playerId) {
 
 		}
@@ -167,6 +186,12 @@ public class Board {
 		public void next() {
 			_currentState = _stateWait;
 			_lastState = this;
+		}
+
+		@Override
+		public void pick(int x, int y) {
+			// TODO Auto-generated method stub
+
 		}
 	}
 
@@ -177,11 +202,6 @@ public class Board {
 	class GameStateFlying extends ObservableState {
 
 		@Override
-		public void onTouch() {
-
-		}
-
-		@Override
 		public void move(String oldField, String newField, int playerId) {
 
 		}
@@ -190,6 +210,12 @@ public class Board {
 		public void next() {
 			_currentState = _stateWait;
 			_lastState = this;
+		}
+
+		@Override
+		public void pick(int x, int y) {
+			// TODO Auto-generated method stub
+
 		}
 	}
 }

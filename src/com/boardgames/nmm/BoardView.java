@@ -87,15 +87,10 @@ public class BoardView extends View {
 	public boolean onTouchEvent(MotionEvent e) {
 		int x = (int) ((e.getX()) / _clickAreaSize);
 		int y = (int) ((e.getY()) / _clickAreaSize);
-
-		if (x < _positions.length && y < _positions.length) {
-			Position p = _board.getPositions()[x][y];
-
-			if (p != null) {
-				p.setStone(Stone.BLACK);
-				invalidate();
-			}
-		}
+		
+		_board.pick(x, y);
+		
+		invalidate();
 		return false;
 	}
 
