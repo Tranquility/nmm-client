@@ -1,13 +1,11 @@
 package com.boardgames.nmm;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.view.MotionEvent;
 import android.view.View;
 
-@SuppressLint("ViewConstructor")
 public class BoardView extends View {
 
 	// The board model
@@ -65,12 +63,25 @@ public class BoardView extends View {
 					Colors.BLACK, Colors.BLACK, Colors.TRANSPARENT,
 					Colors.TRANSPARENT } };
 
+	/**
+	 * Creates a new view that represents the board
+	 * 
+	 * @param context The Activity that uses this view
+	 * @param board The model that will be represented by this view
+	 */
 	public BoardView(Context context, Board board) {
 		super(context);
 		setBackgroundColor(Colors.TAN.getColor());
 		_paint = new Paint();
 		_board = board;
 		_positions = _board.getPositions();
+	}
+	
+	/**
+	 * Dummy Constructor, necessary...
+	 */
+	public BoardView(Context context) {
+		super(context);
 	}
 
 	public boolean onTouchEvent(MotionEvent e) {
@@ -82,6 +93,7 @@ public class BoardView extends View {
 
 			if (p != null) {
 				p.setStone(Stone.BLACK);
+				invalidate();
 			}
 		}
 		return false;
@@ -154,8 +166,8 @@ public class BoardView extends View {
 			for (int j = 0; j < _positions.length; ++j) {
 				Position temp = _positions[i][j];
 				if (temp != null) {
-					float x = _boardOffset + j * _clickAreaSize;
-					float y = _boardOffset + i * _clickAreaSize;
+					float x = _boardOffset + i * _clickAreaSize;
+					float y = _boardOffset + j * _clickAreaSize;
 					if (temp.getStone() == Stone.BLACK) 
 						drawStone(canvas, x, y, _blackStone);
 					else if (temp.getStone() == Stone.WHITE)
