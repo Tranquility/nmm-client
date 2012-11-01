@@ -2,19 +2,35 @@ package com.boardgames.nmm;
 
 import com.boardgames.nmm.R;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
+
+	SharedPreferences pref;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		pref = this.getSharedPreferences("token", Context.MODE_PRIVATE);
+		String token = pref.getString("token", null);
+		if (token != null) {
+			Toast.makeText(this, "You are still logged in!", Toast.LENGTH_SHORT)
+					.show();
+
+		} else {
+			Toast.makeText(this, "You need to log in or create a new account!",
+					Toast.LENGTH_SHORT).show();
+		}
 
 		addRegisterButtonListener();
 		addStartButtonListener();
@@ -41,7 +57,7 @@ public class MainActivity extends Activity {
 			}
 		});
 	}
-	
+
 	/**
 	 * Adds a listener to the button that starts the game.
 	 */
@@ -56,7 +72,7 @@ public class MainActivity extends Activity {
 			}
 		});
 	}
-	
+
 	/**
 	 * Adds a listener to the button that opens login activity.
 	 */

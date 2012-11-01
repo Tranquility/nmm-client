@@ -4,6 +4,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -14,15 +16,24 @@ import android.widget.Toast;
 
 public class LoginActivity extends Activity {
 
+	SharedPreferences pref;
+
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-	    super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-	
+		pref = this.getSharedPreferences("token", Context.MODE_PRIVATE);
+		String token = pref.getString("token", null);
+		if (token != null) {
+			System.out.println(token);
+		} else {
+			System.out.println("not logged in");
+		}
+
 		addLoginButtonListener();
 	}
-	
+
 	/**
 	 * Adds a listener to the button that sends the login data
 	 */
@@ -70,9 +81,12 @@ public class LoginActivity extends Activity {
 									+ result.optJSONObject("errors").toString(),
 							Toast.LENGTH_SHORT).show();
 				} else {
-					Toast.makeText(LoginActivity.this,
-							"Login Successful:"+result.toString(), Toast.LENGTH_SHORT)
-							.show();
+					try {
+						pref.edit().putString("token",result.getString("token").toString()).commit();
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
 		}.execute();
