@@ -1,17 +1,33 @@
 package com.boardgames.nmm;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.view.MotionEvent;
 import android.view.View;
 
+@SuppressLint("ViewConstructor")
 public class BoardView extends View {
 
+	// The board model
 	private Board _board;
+	// The positions on that board
+	private Position[][] _positions;
+	// Heigth of the screen
 	private int _height;
+	// Widht of the screen
 	private int _width;
+	// The paint object to draw the board
 	private Paint _paint;
-	private final int _size = 10;
+	// Size of one "pixel" of a stone
+	private int _stonePixelSize;
+	// Size of the clickable area around a position
+	private float _clickAreaSize;
+	// Size of the board
+	private float _boardSize;
+	// Distance between field and top of the screen
+	private float _boardOffset;
 
 	Colors[][] _blackStone = {
 			{ Colors.TRANSPARENT, Colors.TRANSPARENT, Colors.WHITE,
@@ -54,6 +70,21 @@ public class BoardView extends View {
 		setBackgroundColor(Colors.TAN.getColor());
 		_paint = new Paint();
 		_board = board;
+		_positions = _board.getPositions();
+	}
+
+	public boolean onTouchEvent(MotionEvent e) {
+		int x = (int) ((e.getX()) / _clickAreaSize);
+		int y = (int) ((e.getY()) / _clickAreaSize);
+
+		if (x < _positions.length && y < _positions.length) {
+			Position p = _board.getPositions()[x][y];
+
+			if (p != null) {
+				p.setStone(Stone.BLACK);
+			}
+		}
+		return false;
 	}
 
 	@Override
@@ -65,6 +96,11 @@ public class BoardView extends View {
 		_width = View.MeasureSpec.getSize(widthMeasureSpec);
 
 		setMeasuredDimension(_width, _height);
+
+		_stonePixelSize = _width / 70;
+		_boardSize = _width * 0.85f;
+		_clickAreaSize = _boardSize / 6f;
+		_boardOffset = (_width - _boardSize) / 2f;
 	}
 
 	@Override
@@ -73,8 +109,7 @@ public class BoardView extends View {
 	 */
 	protected void onDraw(Canvas canvas) {
 		drawField(canvas);
-		drawStone(canvas, _width * 0.075f, _width * 0.075f, _blackStone);
-		drawStone(canvas, _width * 0.925f, _width * 0.925f, _whiteStone);
+		drawPositions(canvas);
 	}
 
 	/**
@@ -86,46 +121,63 @@ public class BoardView extends View {
 		_paint.setStyle(Paint.Style.STROKE);
 
 		// Draw outer rectangle
-		float oLength = _width * 0.85f;
-		float oStart = (_width - oLength) / 2f;
-		float oStop = oStart + oLength;
 
-		canvas.drawRect(oStart, oStart, oStop, oStop, _paint);
+		float oStop = _boardOffset + _boardSize;
+
+		canvas.drawRect(_boardOffset, _boardOffset, oStop, oStop, _paint);
 
 		// Draw middle rectangle
-		float mStart = oStart + oLength / 7f;
-		float mStop = oStop - oLength / 7f;
+		float mStart = _boardOffset + _boardSize / 6f;
+		float mStop = oStop - _boardSize / 6f;
 
 		canvas.drawRect(mStart, mStart, mStop, mStop, _paint);
 
 		// Draw inner rectangle
-		float iStart = mStart + oLength / 7f;
-		float iStop = mStop - oLength / 7f;
+		float iStart = mStart + _boardSize / 6f;
+		float iStop = mStop - _boardSize / 6f;
 
 		canvas.drawRect(iStart, iStart, iStop, iStop, _paint);
 
 		// Draw connection between rectangles
-		canvas.drawLine(oStart, oStart + oLength / 2f, iStart, oStart + oLength
-				/ 2f, _paint);
-		canvas.drawLine(oStart + oLength / 2f, oStart, oStart + oLength / 2f,
-				iStart, _paint);
-		canvas.drawLine(iStop, oStart + oLength / 2f, oStop, oStart + oLength
-				/ 2f, _paint);
-		canvas.drawLine(oStart + oLength / 2f, iStop, oStart + oLength / 2f,
-				oStop, _paint);
+		canvas.drawLine(_boardOffset, _boardOffset + _boardSize / 2f, iStart,
+				_boardOffset + _boardSize / 2f, _paint);
+		canvas.drawLine(_boardOffset + _boardSize / 2f, _boardOffset,
+				_boardOffset + _boardSize / 2f, iStart, _paint);
+		canvas.drawLine(iStop, _boardOffset + _boardSize / 2f, oStop,
+				_boardOffset + _boardSize / 2f, _paint);
+		canvas.drawLine(_boardOffset + _boardSize / 2f, iStop, _boardOffset
+				+ _boardSize / 2f, oStop, _paint);
+	}
+	
+	private void drawPositions(Canvas canvas) {
+		for (int i = 0; i < _positions.length; ++i) {
+			for (int j = 0; j < _positions.length; ++j) {
+				Position temp = _positions[i][j];
+				if (temp != null) {
+					float x = _boardOffset + j * _clickAreaSize;
+					float y = _boardOffset + i * _clickAreaSize;
+					if (temp.getStone() == Stone.BLACK) 
+						drawStone(canvas, x, y, _blackStone);
+					else if (temp.getStone() == Stone.WHITE)
+						drawStone(canvas, x, y, _whiteStone);
+				}
+			}
+		}
 	}
 
-	private void drawStone(Canvas canvas, float centerX, float centerY, Colors[][] stone) {
+	private void drawStone(Canvas canvas, float centerX, float centerY,
+			Colors[][] stone) {
 		_paint.setStyle(Paint.Style.FILL);
-		float offsetX = centerX - (_size * stone.length / 2f);
-		float offsetY = centerY - (_size * stone.length / 2f);
+		float offsetX = centerX - (_stonePixelSize * stone.length / 2f);
+		float offsetY = centerY - (_stonePixelSize * stone.length / 2f);
 
 		for (int i = 0; i < stone.length; ++i) {
 			for (int j = 0; j < stone.length; ++j) {
 				int color = stone[i][j].getColor();
 				_paint.setColor(color);
-				canvas.drawRect(offsetX + i * _size, offsetY + j * _size, offsetX
-						+ (i + 1) * _size, offsetY + (j + 1) * _size, _paint);
+				canvas.drawRect(offsetX + i * _stonePixelSize, offsetY + j
+						* _stonePixelSize, offsetX + (i + 1) * _stonePixelSize,
+						offsetY + (j + 1) * _stonePixelSize, _paint);
 			}
 		}
 	}

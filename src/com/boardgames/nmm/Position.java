@@ -9,7 +9,7 @@ public class Position {
 
     private String _positionName;
 
-    private Stone _stone;
+    private Stone _stone = null;
 
     public Position(String name) {
         _positionName = name;
@@ -39,17 +39,12 @@ public class Position {
         _neighborWest = w;
     }
 
-    public boolean setStone(Stone s) {
-        if (_stone == null) {
-            _stone = s;
-            return true;
-        } else {
-            return false;
-        }
+    public void setStone(Stone s) {
+        _stone = s;
     }
     
-    public void removeStone() {
-        _stone = null;
+    public Stone getStone() {
+    	return _stone;
     }
 
     public String getPositionName() {
