@@ -61,7 +61,7 @@ public class MainActivity extends Activity {
 	 * Adds a listener to the button that opens login activity.
 	 */
 	private void addLoginButtonListener() {
-		Button loginButton = (Button) findViewById(R.id.button_login);
+		Button loginButton = (Button) findViewById(R.id.button_gotologin);
 		loginButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
