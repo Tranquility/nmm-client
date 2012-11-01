@@ -18,6 +18,7 @@ public class MainActivity extends Activity {
 
 		addRegisterButtonListener();
 		addStartButtonListener();
+		addLoginButtonListener();
 	}
 
 	@Override
@@ -51,6 +52,21 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				Intent intent = new Intent(getApplicationContext(),
 						BoardActivity.class);
+				startActivity(intent);
+			}
+		});
+	}
+	
+	/**
+	 * Adds a listener to the button that opens login activity.
+	 */
+	private void addLoginButtonListener() {
+		Button loginButton = (Button) findViewById(R.id.button_login);
+		loginButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(getApplicationContext(),
+						LoginActivity.class);
 				startActivity(intent);
 			}
 		});

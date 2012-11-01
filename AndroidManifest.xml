@@ -33,6 +33,7 @@
             android:name="BoardActivity"
             android:label="@string/title_activity_main"
             android:screenOrientation="portrait" />
+        <activity android:name="LoginActivity"></activity>
     </application>
 
 </manifest>
