@@ -7,16 +7,9 @@ public class Position {
     private Position _neighborSouth;
     private Position _neighborWest;
 
-    private String _positionName;
-
     private Stone _stone = null;
 
-    public Position(String name) {
-        _positionName = name;
-    }
-
-    public Position(String name, Position n, Position e, Position s, Position w) {
-        _positionName = name;
+    public Position(Position n, Position e, Position s, Position w) {
         _neighborEast = e;
         _neighborNorth = n;
         _neighborSouth = s;
@@ -47,15 +40,11 @@ public class Position {
     	return _stone;
     }
 
-    public String getPositionName() {
-        return _positionName;
-    }
-
-    public boolean isNeighbor(String position) {
-        return (position.equals(_neighborEast.getPositionName())
-                || position.equals(_neighborWest.getPositionName())
-                || position.equals(_neighborNorth.getPositionName()) 
-                || position.equals(_neighborSouth.getPositionName()));
+    public boolean isNeighbor(Position position) {
+        return (position == _neighborEast
+                || position == _neighborWest
+                || position == _neighborNorth 
+                || position == _neighborSouth);
     }
 
     public boolean isEmpty() {

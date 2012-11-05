@@ -6,7 +6,7 @@ public class Board {
 
 	private ObservableState _currentState;
 	private ObservableState _lastState;
-	private ObservableState _stateWait;
+	private ObservableState _stateWaiting;
 	private ObservableState _statePutting;
 	private ObservableState _stateMoving;
 	private ObservableState _stateFlying;
@@ -17,6 +17,7 @@ public class Board {
 	public Board() {
 		initializeField();
 		initializeStates();
+		setStartState();
 	}
 
 	/**
@@ -24,7 +25,7 @@ public class Board {
 	 * state where the player is waiting for the opponent.
 	 */
 	public void registerGetObserver(StateObserver so) {
-		_stateWait.registerObserver(so);
+		_stateWaiting.registerObserver(so);
 	}
 
 	/**
@@ -56,44 +57,43 @@ public class Board {
 
 	public void waitState() {
 		_lastState = _currentState;
-		_currentState = _stateWait;
+		_currentState = _stateWaiting;
 	}
 
 	private void initializeStates() {
-		_stateWait = new GameStateWaiting();
+		_stateWaiting = new GameStateWaiting();
 		_statePutting = new GameStatePutting();
 		_stateMoving = new GameStateMoving();
 		_stateFlying = new GameStateFlying();
-		_currentState = _statePutting;
 	}
 
 	private void initializeField() {
 		Position a1, a4 = null, a7 = null, b2, b4 = null, b6 = null, c3, c4 = null, c5 = null, d1 = null, d2 = null, d3 = null, d5 = null, d6 = null, d7 = null, e3 = null, e4 = null, e5 = null, f2 = null, f4 = null, f6 = null, g1 = null, g4 = null, g7 = null;
 
-		a1 = new Position("a1", null, d1, a4, null);
-		a4 = new Position("a4", a1, b4, a7, null);
-		a7 = new Position("a7", a4, d7, null, null);
-		b2 = new Position("b2", null, d2, b4, null);
-		b4 = new Position("b4", b6, c4, b2, a4);
-		b6 = new Position("b6", b4, d6, null, null);
-		c3 = new Position("c3", null, d3, c4, null);
-		c4 = new Position("c4", c3, null, c5, b4);
-		c5 = new Position("c5", c4, d5, null, null);
-		d1 = new Position("d1", null, g1, d2, a1);
-		d2 = new Position("d2", d1, f2, d3, b2);
-		d3 = new Position("d3", d2, e3, null, c3);
-		d5 = new Position("d5", null, e5, d6, c5);
-		d6 = new Position("d6", d5, f6, d7, b6);
-		d7 = new Position("d7", d6, g7, null, a1);
-		e3 = new Position("e3", null, null, e4, d3);
-		e4 = new Position("e4", e3, f4, e5, null);
-		e5 = new Position("e5", e4, null, null, d5);
-		f2 = new Position("f2", null, null, f4, d2);
-		f4 = new Position("f4", f2, g4, f6, e4);
-		f6 = new Position("f6", f4, null, null, d6);
-		g1 = new Position("g1", null, null, g4, d1);
-		g4 = new Position("g4", g1, null, g7, f4);
-		g7 = new Position("g7", g4, null, null, d7);
+		a1 = new Position(null, d1, a4, null);
+		a4 = new Position(a1, b4, a7, null);
+		a7 = new Position(a4, d7, null, null);
+		b2 = new Position(null, d2, b4, null);
+		b4 = new Position(b6, c4, b2, a4);
+		b6 = new Position(b4, d6, null, null);
+		c3 = new Position(null, d3, c4, null);
+		c4 = new Position(c3, null, c5, b4);
+		c5 = new Position(c4, d5, null, null);
+		d1 = new Position(null, g1, d2, a1);
+		d2 = new Position(d1, f2, d3, b2);
+		d3 = new Position(d2, e3, null, c3);
+		d5 = new Position(null, e5, d6, c5);
+		d6 = new Position(d5, f6, d7, b6);
+		d7 = new Position(d6, g7, null, a1);
+		e3 = new Position(null, null, e4, d3);
+		e4 = new Position(e3, f4, e5, null);
+		e5 = new Position(e4, null, null, d5);
+		f2 = new Position(null, null, f4, d2);
+		f4 = new Position(f2, g4, f6, e4);
+		f6 = new Position(f4, null, null, d6);
+		g1 = new Position(null, null, g4, d1);
+		g4 = new Position(g1, null, g7, f4);
+		g7 = new Position(g4, null, null, d7);
 
 		_positions = new Position[][] { { a1, null, null, a4, null, null, a7 },
 				{ null, b2, null, b4, null, b6, null },
@@ -103,6 +103,18 @@ public class Board {
 				{ null, f2, null, f4, null, f6, null },
 				{ g1, null, null, g4, null, null, g7 } };
 
+	}
+
+	/**
+	 * Sets the state at the beginning of the game, depending on the player's
+	 * color. If player has white, he begins, otherwise he waits for the
+	 * opponent-
+	 */
+	private void setStartState() {
+		if (_playerStone == Stone.WHITE)
+			_currentState = _statePutting;
+		else
+			_currentState = _stateWaiting;
 	}
 
 	/**
@@ -140,7 +152,7 @@ public class Board {
 				int fromY = oldField % 10;
 				_positions[fromX][fromY].setStone(null);
 			}
-			
+
 			int toX = newField / 10;
 			int toY = newField % 10;
 			_positions[toX][toY].setStone(_opponentStone);
@@ -163,7 +175,7 @@ public class Board {
 
 		@Override
 		public void next() {
-			_currentState = _stateWait;
+			_currentState = _stateWaiting;
 			_lastState = this;
 		}
 
@@ -202,7 +214,7 @@ public class Board {
 
 		@Override
 		public void next() {
-			_currentState = _stateWait;
+			_currentState = _stateWaiting;
 			_lastState = this;
 		}
 
@@ -227,7 +239,7 @@ public class Board {
 
 		@Override
 		public void next() {
-			_currentState = _stateWait;
+			_currentState = _stateWaiting;
 			_lastState = this;
 		}
 
