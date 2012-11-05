@@ -4,6 +4,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -12,34 +14,41 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class RegistrationActivity extends Activity {
+public class LoginActivity extends Activity {
+
+	SharedPreferences pref;
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_registration);
+		setContentView(R.layout.activity_login);
+		pref = this.getSharedPreferences("token", Context.MODE_PRIVATE);
+		String token = pref.getString("token", null);
+		if (token != null) {
+			System.out.println(token);
+		} else {
+			System.out.println("not logged in");
+		}
 
-		addCreateButtonListener();
+		addLoginButtonListener();
 	}
 
 	/**
-	 * Adds a listener to the button that sends the "create account" request
+	 * Adds a listener to the button that sends the login data
 	 */
-	private void addCreateButtonListener() {
-		Button btn = (Button) findViewById(R.id.button_createAcc);
+	private void addLoginButtonListener() {
+		Button btn = (Button) findViewById(R.id.button_login);
 		btn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				EditText emailEdit = (EditText) findViewById(R.id.register_email);
-				EditText passwordEdit = (EditText) findViewById(R.id.register_password);
-				final JSONObject json = new JSONObject();
+				EditText emailEdit = (EditText) findViewById(R.id.email);
+				EditText passwordEdit = (EditText) findViewById(R.id.password);
 				JSONObject playerjson = new JSONObject();
 				try {
 					playerjson.put("password", passwordEdit.getText());
 					playerjson.put("email", emailEdit.getText());
-					json.put("player", playerjson);
-					postData(json);
+					postData(playerjson);
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -60,21 +69,24 @@ public class RegistrationActivity extends Activity {
 
 			@Override
 			protected JSONObject doInBackground(Void... params) {
-				String url = "http://nmm.ole-reifschneider.de/players.json";
+				String url = "http://nmm.ole-reifschneider.de/tokens.json";
 				return NetworkManager.postJson(url, o);
 			}
 
 			protected void onPostExecute(JSONObject result) {
 				if (result.optJSONObject("errors") != null) {
 					Toast.makeText(
-							RegistrationActivity.this,
+							LoginActivity.this,
 							"error:"
 									+ result.optJSONObject("errors").toString(),
 							Toast.LENGTH_SHORT).show();
 				} else {
-					Toast.makeText(RegistrationActivity.this,
-							"Account successful created", Toast.LENGTH_SHORT)
-							.show();
+					try {
+						pref.edit().putString("token",result.getString("token").toString()).commit();
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
 		}.execute();
