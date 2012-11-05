@@ -68,7 +68,10 @@ public class Board {
 	}
 
 	private void initializeField() {
-		Position a1, a4 = null, a7 = null, b2, b4 = null, b6 = null, c3, c4 = null, c5 = null, d1 = null, d2 = null, d3 = null, d5 = null, d6 = null, d7 = null, e3 = null, e4 = null, e5 = null, f2 = null, f4 = null, f6 = null, g1 = null, g4 = null, g7 = null;
+		Position a1, a4 = null, a7 = null, b2, b4 = null, b6 = null, c3, c4 = null, 
+				c5 = null, d1 = null, d2 = null, d3 = null, d5 = null, d6 = null,
+				d7 = null, e3 = null, e4 = null, e5 = null, f2 = null, f4 = null, 
+				f6 = null, g1 = null, g4 = null, g7 = null;
 
 		a1 = new Position(null, d1, a4, null);
 		a4 = new Position(a1, b4, a7, null);
@@ -119,7 +122,8 @@ public class Board {
 
 	/**
 	 * Checks if a given coordinate is a valid Position. It is valid if it is
-	 * within the array boundaries and not null.
+	 * within the array boundaries and not null and empty. THIS ONLY WORKS IN
+	 * THE FIRST PHASE.
 	 */
 	private boolean isChoiceValid(int x, int y) {
 		if (x < _positions.length && y < _positions.length)
@@ -141,7 +145,8 @@ public class Board {
 
 		@Override
 		public void pick(int x, int y) {
-			// TODO Auto-generated method stub
+			// This is empty because in this state we wait for the opponent.
+			// This requires no user interaction
 
 		}
 
