@@ -11,6 +11,9 @@ public class Board {
 	private ObservableState _stateMoving;
 	private ObservableState _stateFlying;
 
+	private final Stone _playerStone = Stone.BLACK;
+	private final Stone _opponentStone = Stone.WHITE;
+
 	public Board() {
 		initializeField();
 		initializeStates();
@@ -36,11 +39,11 @@ public class Board {
 		_stateFlying.registerObserver(so);
 	}
 
-	public void move(String oldField, String newField, int playerId) {
+	public void move(int oldField, int newField, int delField) {
 		// TODO: Do something with the data
 		// It may be necessary to change the move method of the abstract class
 		// ObservableState
-		_currentState.move(oldField, newField, playerId);
+		_currentState.move(oldField, newField, delField);
 	}
 
 	public void pick(int x, int y) {
@@ -101,14 +104,15 @@ public class Board {
 				{ g1, null, null, g4, null, null, g7 } };
 
 	}
-	
+
 	/**
-	 * Checks if a given coordinate is a valid Position. It is valid if it
-	 * is within the array boundaries and not null.
+	 * Checks if a given coordinate is a valid Position. It is valid if it is
+	 * within the array boundaries and not null.
 	 */
-	private boolean isPositionValid(int x, int y) {
+	private boolean isChoiceValid(int x, int y) {
 		if (x < _positions.length && y < _positions.length)
-			return _positions[x][y] != null;
+			if (_positions[x][y] != null)
+				return _positions[x][y].isEmpty();
 		return false;
 	}
 
@@ -117,11 +121,6 @@ public class Board {
 	 * During this state the player cannot move or put any of his stones.
 	 */
 	class GameStateWaiting extends ObservableState {
-
-		@Override
-		public void move(String oldField, String newField, int playerId) {
-
-		}
 
 		@Override
 		public void next() {
@@ -133,6 +132,25 @@ public class Board {
 			// TODO Auto-generated method stub
 
 		}
+
+		@Override
+		public void move(int oldField, int newField, int delField) {
+			if (oldField >= 0) {
+				int fromX = oldField / 10;
+				int fromY = oldField % 10;
+				_positions[fromX][fromY].setStone(null);
+			}
+			
+			int toX = newField / 10;
+			int toY = newField % 10;
+			_positions[toX][toY].setStone(_opponentStone);
+
+			if (delField >= 0) {
+				int delX = delField / 10;
+				int delY = delField % 10;
+				_positions[delX][delY].setStone(null);
+			}
+		}
 	}
 
 	/**
@@ -143,15 +161,6 @@ public class Board {
 	 */
 	class GameStatePutting extends ObservableState {
 
-		private int _to;
-
-		@Override
-		public void move(String oldField, String newField, int playerId) {
-			int x = _to / 10;
-			int y = _to % 10;
-			_positions[x][y].setStone(Stone.BLACK);
-		}
-
 		@Override
 		public void next() {
 			_currentState = _stateWait;
@@ -160,11 +169,25 @@ public class Board {
 
 		@Override
 		public void pick(int x, int y) {
-			if (isPositionValid(x, y)) {
-				if (_positions[x][y].isEmpty()) {
-					_to = x * 10 + y;
-					move(null, null, 0);
-				}
+			if (isChoiceValid(x, y)) {
+				int to = x * 10 + y;
+				move(-1, to, -1);
+				// Check if Mühle, wenn nein next()
+				next();
+			}
+		}
+
+		@Override
+		public void move(int oldField, int newField, int delField) {
+			int toX = newField / 10;
+			int toY = newField % 10;
+			_positions[toX][toY].setStone(_playerStone);
+
+			if (delField >= 0) {
+				int delX = delField / 10;
+				int delY = delField % 10;
+				_positions[delX][delY].setStone(null);
+
 			}
 		}
 	}
@@ -178,11 +201,6 @@ public class Board {
 	class GameStateMoving extends ObservableState {
 
 		@Override
-		public void move(String oldField, String newField, int playerId) {
-
-		}
-
-		@Override
 		public void next() {
 			_currentState = _stateWait;
 			_lastState = this;
@@ -190,6 +208,12 @@ public class Board {
 
 		@Override
 		public void pick(int x, int y) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void move(int oldField, int newField, int delField) {
 			// TODO Auto-generated method stub
 
 		}
@@ -202,11 +226,6 @@ public class Board {
 	class GameStateFlying extends ObservableState {
 
 		@Override
-		public void move(String oldField, String newField, int playerId) {
-
-		}
-
-		@Override
 		public void next() {
 			_currentState = _stateWait;
 			_lastState = this;
@@ -214,6 +233,12 @@ public class Board {
 
 		@Override
 		public void pick(int x, int y) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void move(int oldField, int newField, int delField) {
 			// TODO Auto-generated method stub
 
 		}
