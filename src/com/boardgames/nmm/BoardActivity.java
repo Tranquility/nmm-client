@@ -111,9 +111,12 @@ public class BoardActivity extends Activity {
 
 				protected void onPostExecute(JSONObject result) {
 					if (result != null) {
+						System.out.println(result.toString());
 						MoveConverter mc = new MoveConverter(result);
+						
 						_board.move(mc.oldField(), mc.newField(), mc.delField());
 						_view.postInvalidate();
+						
 						_timer.cancel();
 					}
 				}

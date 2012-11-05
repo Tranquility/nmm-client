@@ -55,11 +55,6 @@ public class Board {
 		return _positions;
 	}
 
-	public void waitState() {
-		_lastState = _currentState;
-		_currentState = _stateWaiting;
-	}
-
 	private void initializeStates() {
 		_stateWaiting = new GameStateWaiting();
 		_statePutting = new GameStatePutting();
@@ -184,7 +179,6 @@ public class Board {
 		public void next() {
 			_currentState = _stateWaiting;
 			_lastState = this;
-			System.out.println("Now we wait");
 		}
 
 		@Override
@@ -207,10 +201,9 @@ public class Board {
 				int delY = delField % 10;
 				_positions[delX][delY].setStone(null);
 			}
-			
-			notifyObservers(oldField, newField, delField);
-			
 			next();
+			
+			notifyObservers(oldField, newField, delField);		
 		}
 	}
 
