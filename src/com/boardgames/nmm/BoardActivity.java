@@ -101,7 +101,7 @@ public class BoardActivity extends Activity {
 					try {
 						if (!result.isNull(0)) {
 							MoveConverter mc = new MoveConverter(result.getJSONObject(0));
-							_board.move(mc.oldField(), mc.newField(), mc.playerId());
+							_board.move(mc.oldField(), mc.newField(), mc.delField());
 							_timer.cancel();
 						}
 					} catch (JSONException e) {
