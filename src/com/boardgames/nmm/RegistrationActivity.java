@@ -60,7 +60,7 @@ public class RegistrationActivity extends Activity {
 
 			@Override
 			protected JSONObject doInBackground(Void... params) {
-				String url = "http://10.0.2.2:3000/players.json";
+				String url = "http://nmm.ole-reifschneider.de/players.json";
 				return NetworkManager.postJson(url, o);
 			}
 

@@ -69,7 +69,7 @@ public class LoginActivity extends Activity {
 
 			@Override
 			protected JSONObject doInBackground(Void... params) {
-				String url = "http://10.0.2.2:3000/tokens.json";
+				String url = "http://nmm.ole-reifschneider.de/tokens.json";
 				return NetworkManager.postJson(url, o);
 			}
 
