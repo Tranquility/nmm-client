@@ -43,10 +43,10 @@ public class LoginActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				EditText emailEdit = (EditText) findViewById(R.id.email);
-				EditText passswordEdit = (EditText) findViewById(R.id.password);
+				EditText passwordEdit = (EditText) findViewById(R.id.password);
 				JSONObject playerjson = new JSONObject();
 				try {
-					playerjson.put("password", passswordEdit.getText());
+					playerjson.put("password", passwordEdit.getText());
 					playerjson.put("email", emailEdit.getText());
 					postData(playerjson);
 				} catch (JSONException e) {

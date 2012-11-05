@@ -32,11 +32,11 @@ public class RegistrationActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				EditText emailEdit = (EditText) findViewById(R.id.register_email);
-				EditText passswordEdit = (EditText) findViewById(R.id.register_password);
+				EditText passwordEdit = (EditText) findViewById(R.id.register_password);
 				final JSONObject json = new JSONObject();
 				JSONObject playerjson = new JSONObject();
 				try {
-					playerjson.put("password", passswordEdit.getText());
+					playerjson.put("password", passwordEdit.getText());
 					playerjson.put("email", emailEdit.getText());
 					json.put("player", playerjson);
 					postData(json);
