@@ -3,11 +3,11 @@ package com.boardgames.nmm;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
@@ -15,17 +15,24 @@ import android.view.Menu;
 public class BoardActivity extends Activity {
 
 	private Board _board;
+	private BoardView _view;
 	private Timer _timer;
+	private String _token;
+	private int _playerId = 1;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
+		SharedPreferences pref = getSharedPreferences("token",
+				Context.MODE_PRIVATE);
+		_token = pref.getString("token", null);
+
 		_board = new Board();
 		registerObservers();
-		
-		BoardView view = new BoardView(this, _board);
-		setContentView(view);
+
+		_view = new BoardView(this, _board);
+		setContentView(_view);
 	}
 
 	@Override
@@ -41,16 +48,19 @@ public class BoardActivity extends Activity {
 	private void registerObservers() {
 		_board.registerGetObserver(new StateObserver() {
 
-			public void notify(JSONObject o) {
+			public void notify(int oldField, int newField, int delField) {
 				getLatestMove();
 			}
 		});
 
 		_board.registerPostObserver(new StateObserver() {
 
-			public void notify(JSONObject o) {
-				postLatestMove(o);
-				_board.waitState();
+			public void notify(int oldField, int newField, int delField) {
+				MoveConverter mc = new MoveConverter(oldField, newField,
+						delField, _playerId);
+				System.out.println(mc.json().toString());
+				postLatestMove(mc.json());
+				getLatestMove();
 			}
 		});
 	}
@@ -65,20 +75,21 @@ public class BoardActivity extends Activity {
 
 			@Override
 			protected JSONObject doInBackground(Void... params) {
-				String url = "http://nmm.ole-reifschneider.de/moves.json";
+				String url = "http://nmm.ole-reifschneider.de/moves.json?auth_token="
+						+ _token;
 				return NetworkManager.postJson(url, o);
 			}
 		}.execute();
 	}
 
-  /**
-   * Starts a timer that creates a new GetRequest 
-   * that checks for changes on the server
-   */
+	/**
+	 * Starts a timer that creates a new GetRequest that checks for changes on
+	 * the server
+	 */
 
 	public void getLatestMove() {
 		_timer = new Timer();
-		_timer.schedule(new GetRequest(), 0, 5 * 1000);
+		_timer.schedule(new GetRequest(), 0, 1 * 1000);
 	}
 
 	/**
@@ -86,26 +97,24 @@ public class BoardActivity extends Activity {
 	 * from the server.
 	 */
 	class GetRequest extends TimerTask {
-		
+
 		public void run() {
-			
-			new AsyncTask<Void, Void, JSONArray>() {
+
+			new AsyncTask<Void, Void, JSONObject>() {
 
 				@Override
-				protected JSONArray doInBackground(Void... params) {
-					String url = "http://nmm.ole-reifschneider.de/moves.json";
+				protected JSONObject doInBackground(Void... params) {
+					String url = "http://nmm.ole-reifschneider.de/moves.json?auth_token="
+							+ _token + "&player_id=" + _playerId;
 					return NetworkManager.getJson(url);
 				}
 
-				protected void onPostExecute(JSONArray result) {
-					try {
-						if (!result.isNull(0)) {
-							MoveConverter mc = new MoveConverter(result.getJSONObject(0));
-							_board.move(mc.oldField(), mc.newField(), mc.delField());
-							_timer.cancel();
-						}
-					} catch (JSONException e) {
-						e.printStackTrace();
+				protected void onPostExecute(JSONObject result) {
+					if (result != null) {
+						MoveConverter mc = new MoveConverter(result);
+						_board.move(mc.oldField(), mc.newField(), mc.delField());
+						_view.postInvalidate();
+						_timer.cancel();
 					}
 				}
 			}.execute();

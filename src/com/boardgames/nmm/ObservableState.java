@@ -3,8 +3,6 @@ package com.boardgames.nmm;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.json.JSONObject;
-
 public abstract class ObservableState {
 	
 	private List<StateObserver> _observers;
@@ -17,9 +15,9 @@ public abstract class ObservableState {
 		_observers.add(so);
 	}
 	
-	public void notifyObservers(JSONObject o) {
+	public void notifyObservers(int oldField, int newField, int delField) {
 		for (StateObserver so : _observers) {
-			so.notify(o);
+			so.notify(oldField, newField, delField);
 		}
 	}
 	

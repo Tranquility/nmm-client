@@ -16,15 +16,15 @@ import android.widget.Toast;
 
 public class LoginActivity extends Activity {
 
-	SharedPreferences pref;
+	SharedPreferences _pref;
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		pref = this.getSharedPreferences("token", Context.MODE_PRIVATE);
-		String token = pref.getString("token", null);
+		_pref = this.getSharedPreferences("token", Context.MODE_PRIVATE);
+		String token = _pref.getString("token", null);
 		if (token != null) {
 			System.out.println(token);
 		} else {
@@ -74,6 +74,7 @@ public class LoginActivity extends Activity {
 			}
 
 			protected void onPostExecute(JSONObject result) {
+				System.out.println(result.toString());
 				if (result.optJSONObject("errors") != null) {
 					Toast.makeText(
 							LoginActivity.this,
@@ -82,7 +83,7 @@ public class LoginActivity extends Activity {
 							Toast.LENGTH_SHORT).show();
 				} else {
 					try {
-						pref.edit().putString("token",result.getString("token").toString()).commit();
+						_pref.edit().putString("token", result.getString("token")).commit();
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

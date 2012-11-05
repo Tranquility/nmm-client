@@ -7,7 +7,7 @@ public class MoveConverter {
 
 	private int _oldField;
 	private int _newField;
-	private int _delField;
+	private int _delField = -1;
 	private int _playerId;
 	private JSONObject _json = new JSONObject();
 
@@ -15,7 +15,7 @@ public class MoveConverter {
 		try {
 			_oldField = json.getInt("old_field");
 			_newField = json.getInt("new_field");
-			_delField = json.getInt("del_field");
+			//_delField = json.getInt("del_field");
 			_playerId = json.getInt("player_id");
 
 		} catch (JSONException e) {

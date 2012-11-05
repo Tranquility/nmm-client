@@ -11,8 +11,8 @@ public class Board {
 	private ObservableState _stateMoving;
 	private ObservableState _stateFlying;
 
-	private final Stone _playerStone = Stone.BLACK;
-	private final Stone _opponentStone = Stone.WHITE;
+	private final Stone _playerStone = Stone.WHITE;
+	private final Stone _opponentStone = Stone.BLACK;
 
 	public Board() {
 		initializeField();
@@ -167,6 +167,8 @@ public class Board {
 				int delY = delField % 10;
 				_positions[delX][delY].setStone(null);
 			}
+			
+			next();
 		}
 	}
 
@@ -182,6 +184,7 @@ public class Board {
 		public void next() {
 			_currentState = _stateWaiting;
 			_lastState = this;
+			System.out.println("Now we wait");
 		}
 
 		@Override
@@ -190,7 +193,6 @@ public class Board {
 				int to = x * 10 + y;
 				move(-1, to, -1);
 				// Check if Mühle, wenn nein next()
-				next();
 			}
 		}
 
@@ -204,8 +206,11 @@ public class Board {
 				int delX = delField / 10;
 				int delY = delField % 10;
 				_positions[delX][delY].setStone(null);
-
 			}
+			
+			notifyObservers(oldField, newField, delField);
+			
+			next();
 		}
 	}
 

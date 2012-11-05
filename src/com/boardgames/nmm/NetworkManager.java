@@ -13,7 +13,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -27,8 +26,8 @@ public class NetworkManager {
 	 *            The URL where the client wants to get JSON Strings
 	 * @return A JSONArray, containing the received JSONObjects
 	 */
-	public static JSONArray getJson(String url) {
-		JSONArray result = null;
+	public static JSONObject getJson(String url) {
+		JSONObject result = null;
 		try {
 			HttpClient client = new DefaultHttpClient();
 			HttpGet get = new HttpGet(url);
@@ -41,7 +40,8 @@ public class NetworkManager {
 			BufferedReader bufferedReader = new BufferedReader(streamReader);
 
 			String line = bufferedReader.readLine();
-			result = new JSONArray(line);
+			if (!line.equals("null"))
+				result = new JSONObject(line);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -78,7 +78,6 @@ public class NetworkManager {
 			try {
 				result = new JSONObject(line);
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} catch (ClientProtocolException e) {
