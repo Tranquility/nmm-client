@@ -23,9 +23,9 @@ public abstract class ObservableState {
 		}
 	}
 	
-	public abstract void onTouch();
+	public abstract void pick(int x, int y);
 	
-	public abstract void move(String oldField, String newField, int playerId);
+	public abstract void move(int oldField, int newField, int delField);
 	
 	public abstract void next();
 	
