@@ -277,7 +277,8 @@ public class Board {
 
 			_to = -1;
 			_from = -1;
-
+			
+			notifyObservers(oldField, newField, delField);
 			next();
 		}
 	}
