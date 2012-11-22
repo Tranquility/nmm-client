@@ -30,6 +30,7 @@ public class BoardActivity extends Activity {
 
 		_board = new Board();
 		registerObservers();
+		_board.setStartState();
 
 		_view = new BoardView(this, _board);
 		setContentView(_view);
@@ -58,7 +59,6 @@ public class BoardActivity extends Activity {
 			public void notify(int oldField, int newField, int delField) {
 				MoveConverter mc = new MoveConverter(oldField, newField,
 						delField, _playerId);
-				System.out.println(mc.json().toString());
 				postLatestMove(mc.json());
 			}
 		});
@@ -87,6 +87,7 @@ public class BoardActivity extends Activity {
 	 */
 
 	public void getLatestMove() {
+		System.out.println("Get");
 		_timer = new Timer();
 		_timer.schedule(new GetRequest(), 0, 1 * 1000);
 	}

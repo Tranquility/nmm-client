@@ -11,8 +11,8 @@ public class Board {
 	private ObservableState _stateMoving;
 	private ObservableState _stateFlying;
 
-	private final Stone _playerStone = Stone.WHITE;
-	private final Stone _opponentStone = Stone.BLACK;
+	private final Stone _playerStone = Stone.BLACK;
+	private final Stone _opponentStone = Stone.WHITE;
 
 	// There are nine stones for each player to place in the initial phase
 	private int _stonesToPlace = 9;
@@ -22,7 +22,6 @@ public class Board {
 	public Board() {
 		initializeField();
 		initializeStates();
-		setStartState();
 	}
 
 	/**
@@ -110,11 +109,12 @@ public class Board {
 	 * color. If player has white, he begins, otherwise he waits for the
 	 * opponent-
 	 */
-	private void setStartState() {
+	public void setStartState() {
 		if (_playerStone == Stone.WHITE)
 			_currentState = _statePutting;
 		else {
 			_currentState = _stateWaiting;
+			_lastState = _statePutting;
 			((GameStateWaiting) _currentState).startPulling();
 		}
 	}
@@ -249,11 +249,17 @@ public class Board {
 		@Override
 		public void pick(int x, int y) {
 			if (isChoiceValid(x, y)) {
-				if (_positions[x][y].getStone() == _playerStone) {
+				Position pos = _positions[x][y];
+				if (pos.getStone() == _playerStone) {
 					_from = x * 10 + y;
-				} else if (_from > -1 && _positions[x][y].isEmpty()) {
-					_to = x * 10 + y;
-					move(_from, _to, -1);
+				} else if (_from > -1 && pos.isEmpty()) {
+					int fromX = _from / 10;
+					int fromY = _from % 10;
+
+					if (_positions[fromX][fromY].isNeighbor(pos)) {
+						_to = x * 10 + y;
+						move(_from, _to, -1);
+					}
 				}
 			}
 
@@ -268,6 +274,11 @@ public class Board {
 			x = newField / 10;
 			y = newField % 10;
 			_positions[x][y].setStone(_playerStone);
+
+			_to = -1;
+			_from = -1;
+
+			next();
 		}
 	}
 
