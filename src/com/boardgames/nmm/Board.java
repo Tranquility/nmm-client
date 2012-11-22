@@ -67,32 +67,32 @@ public class Board {
 	}
 
 	private void initializeField() {
-		Position a1, a4 = null, a7 = null, b2, b4 = null, b6 = null, c3, c4 = null, c5 = null, d1 = null, d2 = null, d3 = null, d5 = null, d6 = null, d7 = null, e3 = null, e4 = null, e5 = null, f2 = null, f4 = null, f6 = null, g1 = null, g4 = null, g7 = null;
+		Position a1, a4, a7, b2, b4, b6, c3, c4, c5, d1, d2, d3, d5, d6, d7, e3, e4, e5, f2, f4, f6, g1, g4, g7;
 
-		a1 = new Position(null, d1, a4, null);
-		a4 = new Position(a1, b4, a7, null);
-		a7 = new Position(a4, d7, null, null);
-		b2 = new Position(null, d2, b4, null);
-		b4 = new Position(b6, c4, b2, a4);
-		b6 = new Position(b4, d6, null, null);
-		c3 = new Position(null, d3, c4, null);
-		c4 = new Position(c3, null, c5, b4);
-		c5 = new Position(c4, d5, null, null);
-		d1 = new Position(null, g1, d2, a1);
-		d2 = new Position(d1, f2, d3, b2);
-		d3 = new Position(d2, e3, null, c3);
-		d5 = new Position(null, e5, d6, c5);
-		d6 = new Position(d5, f6, d7, b6);
-		d7 = new Position(d6, g7, null, a1);
-		e3 = new Position(null, null, e4, d3);
-		e4 = new Position(e3, f4, e5, null);
-		e5 = new Position(e4, null, null, d5);
-		f2 = new Position(null, null, f4, d2);
-		f4 = new Position(f2, g4, f6, e4);
-		f6 = new Position(f4, null, null, d6);
-		g1 = new Position(null, null, g4, d1);
-		g4 = new Position(g1, null, g7, f4);
-		g7 = new Position(g4, null, null, d7);
+		a1 = new Position();
+		a4 = new Position();
+		a7 = new Position();
+		b2 = new Position();
+		b4 = new Position();
+		b6 = new Position();
+		c3 = new Position();
+		c4 = new Position();
+		c5 = new Position();
+		d1 = new Position();
+		d2 = new Position();
+		d3 = new Position();
+		d5 = new Position();
+		d6 = new Position();
+		d7 = new Position();
+		e3 = new Position();
+		e4 = new Position();
+		e5 = new Position();
+		f2 = new Position();
+		f4 = new Position();
+		f6 = new Position();
+		g1 = new Position();
+		g4 = new Position();
+		g7 = new Position();
 
 		_positions = new Position[][] { { a1, null, null, a4, null, null, a7 },
 				{ null, b2, null, b4, null, b6, null },

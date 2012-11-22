@@ -1,35 +1,15 @@
 package com.boardgames.nmm;
 
+import java.util.List;
+
 public class Position {
 
-    private Position _neighborNorth;
-    private Position _neighborEast;
-    private Position _neighborSouth;
-    private Position _neighborWest;
+    private List<Position> _neighbors;
 
     private Stone _stone = null;
 
-    public Position(Position n, Position e, Position s, Position w) {
-        _neighborEast = e;
-        _neighborNorth = n;
-        _neighborSouth = s;
-        _neighborWest = w;
-    }
-
-    public void setNeighborNorth(Position n) {
-        _neighborNorth = n;
-    }
-
-    public void setNeighborEast(Position e) {
-        _neighborEast = e;
-    }
-
-    public void setNeighborSouth(Position s) {
-        _neighborSouth = s;
-    }
-
-    public void setNeighborWest(Position w) {
-        _neighborWest = w;
+    public void setNeighbors(List<Position> neighbors) {
+    	_neighbors = neighbors;
     }
 
     public void setStone(Stone s) {
@@ -41,10 +21,7 @@ public class Position {
     }
 
     public boolean isNeighbor(Position position) {
-        return (position == _neighborEast
-                || position == _neighborWest
-                || position == _neighborNorth 
-                || position == _neighborSouth);
+        return _neighbors.contains(position);
     }
 
     public boolean isEmpty() {
