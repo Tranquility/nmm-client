@@ -166,6 +166,10 @@ public class Board {
 
 			next();
 		}
+		
+		public void startPulling() {
+			notifyObservers(0, 0, 0);
+		}
 	}
 
 	/**
@@ -179,6 +183,7 @@ public class Board {
 		@Override
 		public void next() {
 			_currentState = _stateWaiting;
+			((GameStateWaiting) _currentState).startPulling();
 
 			if (_stonesToPlace > 0)
 				_lastState = this;
@@ -231,6 +236,7 @@ public class Board {
 		@Override
 		public void next() {
 			_currentState = _stateWaiting;
+			((GameStateWaiting) _currentState).startPulling();
 			
 			if (_stonesOnField > 3)
 				_lastState = this;

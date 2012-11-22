@@ -60,7 +60,6 @@ public class BoardActivity extends Activity {
 						delField, _playerId);
 				System.out.println(mc.json().toString());
 				postLatestMove(mc.json());
-				getLatestMove();
 			}
 		});
 	}
