@@ -113,8 +113,10 @@ public class Board {
 	private void setStartState() {
 		if (_playerStone == Stone.WHITE)
 			_currentState = _statePutting;
-		else
+		else {
 			_currentState = _stateWaiting;
+			((GameStateWaiting) _currentState).startPulling();
+		}
 	}
 
 	/**
@@ -166,7 +168,7 @@ public class Board {
 
 			next();
 		}
-		
+
 		public void startPulling() {
 			notifyObservers(0, 0, 0);
 		}
@@ -208,7 +210,7 @@ public class Board {
 			int x = newField / 10;
 			int y = newField % 10;
 			_positions[x][y].setStone(_playerStone);
-			
+
 			_stonesToPlace--;
 			_stonesOnField++;
 
@@ -237,7 +239,7 @@ public class Board {
 		public void next() {
 			_currentState = _stateWaiting;
 			((GameStateWaiting) _currentState).startPulling();
-			
+
 			if (_stonesOnField > 3)
 				_lastState = this;
 			else
