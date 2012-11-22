@@ -110,8 +110,9 @@ public class BoardActivity extends Activity {
 				}
 
 				protected void onPostExecute(JSONObject result) {
-					if (result != null) {
+					if (result == null) {
 						_timer.schedule(new GetRequest(), 1000);
+					} else {
 						MoveConverter mc = new MoveConverter(result);
 						_board.move(mc.oldField(), mc.newField(), mc.delField());
 
