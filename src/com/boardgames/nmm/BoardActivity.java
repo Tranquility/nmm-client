@@ -89,7 +89,7 @@ public class BoardActivity extends Activity {
 	public void getLatestMove() {
 		System.out.println("Get");
 		_timer = new Timer();
-		_timer.schedule(new GetRequest(), 0, 1 * 1000);
+		_timer.schedule(new GetRequest(), 0);
 	}
 
 	/**
@@ -111,11 +111,10 @@ public class BoardActivity extends Activity {
 
 				protected void onPostExecute(JSONObject result) {
 					if (result != null) {
-						_timer.cancel();
+						_timer.schedule(new GetRequest(), 1000);
 						MoveConverter mc = new MoveConverter(result);
-						
 						_board.move(mc.oldField(), mc.newField(), mc.delField());
-						
+
 						_view.invalidate();
 					}
 				}
