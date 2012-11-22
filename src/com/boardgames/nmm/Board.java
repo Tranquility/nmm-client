@@ -14,6 +14,11 @@ public class Board {
 	private final Stone _playerStone = Stone.WHITE;
 	private final Stone _opponentStone = Stone.BLACK;
 
+	// There are nine stones for each player to place in the initial phase
+	private int _stonesToPlace = 9;
+	// How many of the players stones are on the field
+	private int _stonesOnField = 0;
+
 	public Board() {
 		initializeField();
 		initializeStates();
@@ -63,10 +68,7 @@ public class Board {
 	}
 
 	private void initializeField() {
-		Position a1, a4 = null, a7 = null, b2, b4 = null, b6 = null, c3, c4 = null, 
-				c5 = null, d1 = null, d2 = null, d3 = null, d5 = null, d6 = null,
-				d7 = null, e3 = null, e4 = null, e5 = null, f2 = null, f4 = null, 
-				f6 = null, g1 = null, g4 = null, g7 = null;
+		Position a1, a4 = null, a7 = null, b2, b4 = null, b6 = null, c3, c4 = null, c5 = null, d1 = null, d2 = null, d3 = null, d5 = null, d6 = null, d7 = null, e3 = null, e4 = null, e5 = null, f2 = null, f4 = null, f6 = null, g1 = null, g4 = null, g7 = null;
 
 		a1 = new Position(null, d1, a4, null);
 		a4 = new Position(a1, b4, a7, null);
@@ -121,10 +123,8 @@ public class Board {
 	 * THE FIRST PHASE.
 	 */
 	private boolean isChoiceValid(int x, int y) {
-		if (x < _positions.length && y < _positions.length)
-			if (_positions[x][y] != null)
-				return _positions[x][y].isEmpty();
-		return false;
+		return x >= 0 && y >= 0 && x < _positions.length
+				&& y < _positions.length && _positions[x][y] != null;
 	}
 
 	/**
@@ -158,11 +158,12 @@ public class Board {
 			_positions[toX][toY].setStone(_opponentStone);
 
 			if (delField >= 0) {
+				_stonesOnField--;
 				int delX = delField / 10;
 				int delY = delField % 10;
 				_positions[delX][delY].setStone(null);
 			}
-			
+
 			next();
 		}
 	}
@@ -178,32 +179,42 @@ public class Board {
 		@Override
 		public void next() {
 			_currentState = _stateWaiting;
-			_lastState = this;
+
+			if (_stonesToPlace > 0)
+				_lastState = this;
+			else
+				_lastState = _stateMoving;
+
 		}
 
 		@Override
 		public void pick(int x, int y) {
 			if (isChoiceValid(x, y)) {
-				int to = x * 10 + y;
-				move(-1, to, -1);
-				// Check if Mühle, wenn nein next()
+				if (_positions[x][y].isEmpty()) {
+					int to = x * 10 + y;
+					move(-1, to, -1);
+					// Check if Mühle, wenn nein next()
+				}
 			}
 		}
 
 		@Override
 		public void move(int oldField, int newField, int delField) {
-			int toX = newField / 10;
-			int toY = newField % 10;
-			_positions[toX][toY].setStone(_playerStone);
+			int x = newField / 10;
+			int y = newField % 10;
+			_positions[x][y].setStone(_playerStone);
+			
+			_stonesToPlace--;
+			_stonesOnField++;
 
 			if (delField >= 0) {
-				int delX = delField / 10;
-				int delY = delField % 10;
-				_positions[delX][delY].setStone(null);
+				x = delField / 10;
+				y = delField % 10;
+				_positions[x][y].setStone(null);
 			}
 			next();
-			
-			notifyObservers(oldField, newField, delField);		
+
+			notifyObservers(oldField, newField, delField);
 		}
 	}
 
@@ -214,23 +225,41 @@ public class Board {
 	 * is activated after each move.
 	 */
 	class GameStateMoving extends ObservableState {
+		int _from = -1;
+		int _to = -1;
 
 		@Override
 		public void next() {
 			_currentState = _stateWaiting;
-			_lastState = this;
+			
+			if (_stonesOnField > 3)
+				_lastState = this;
+			else
+				_lastState = _stateFlying;
 		}
 
 		@Override
 		public void pick(int x, int y) {
-			// TODO Auto-generated method stub
+			if (isChoiceValid(x, y)) {
+				if (_positions[x][y].getStone() == _playerStone) {
+					_from = x * 10 + y;
+				} else if (_from > -1 && _positions[x][y].isEmpty()) {
+					_to = x * 10 + y;
+					move(_from, _to, -1);
+				}
+			}
 
 		}
 
 		@Override
 		public void move(int oldField, int newField, int delField) {
-			// TODO Auto-generated method stub
+			int x = oldField / 10;
+			int y = oldField % 10;
+			_positions[x][y].setStone(null);
 
+			x = newField / 10;
+			y = newField % 10;
+			_positions[x][y].setStone(_playerStone);
 		}
 	}
 
