@@ -15,7 +15,7 @@ public class MoveConverter {
 		try {
 			_oldField = json.getInt("old_field");
 			_newField = json.getInt("new_field");
-			_delField = json.getInt("del_field");
+			_delField = json.getInt("delete_field");
 			_playerId = json.getInt("player_id");
 
 		} catch (JSONException e) {
@@ -27,7 +27,7 @@ public class MoveConverter {
 		try {
 			_json.put("old_field", oldField);
 			_json.put("new_field", newField);
-			_json.put("del_field", delField);
+			_json.put("delete_field", delField);
 			_json.put("player_id", playerId);
 		} catch (JSONException e) {
 			e.printStackTrace();
