@@ -40,7 +40,6 @@ public class NetworkManager {
 			BufferedReader bufferedReader = new BufferedReader(streamReader);
 
 			String line = bufferedReader.readLine();
-			System.out.println(line);
 			if (!line.equals("null"))
 				result = new JSONObject(line);
 		} catch (Exception e) {

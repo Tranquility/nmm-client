@@ -87,8 +87,7 @@ public class BoardView extends View {
 	public boolean onTouchEvent(MotionEvent e) {
 		int col = (int) ((e.getX()) / _clickAreaSize);
 		int row = (int) ((e.getY()) / _clickAreaSize);
-		System.out.println(row + ":" + col);
-		
+
 		_board.pick(row, col);
 		
 		invalidate();

@@ -89,7 +89,7 @@ public class BoardActivity extends Activity {
 	public void getLatestMove() {
 		System.out.println("Get");
 		_timer = new Timer();
-		_timer.schedule(new GetRequest(), 0);
+		_timer.schedule(new GetRequest(), 1500);
 	}
 
 	/**

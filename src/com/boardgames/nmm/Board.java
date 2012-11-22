@@ -108,7 +108,7 @@ public class Board {
 		d3.setNeighbors(d2, e3, c3);
 		d5.setNeighbors(e5, d6, c5);
 		d6.setNeighbors(d5, f6, d7, b6);
-		d7.setNeighbors(d6, g7, a1);
+		d7.setNeighbors(d6, g7, a7);
 		e3.setNeighbors(e4, d3);
 		e4.setNeighbors(e3, f4, e5);
 		e5.setNeighbors(e4, d5);
