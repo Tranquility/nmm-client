@@ -85,10 +85,11 @@ public class BoardView extends View {
 	}
 
 	public boolean onTouchEvent(MotionEvent e) {
-		int x = (int) ((e.getX()) / _clickAreaSize);
-		int y = (int) ((e.getY()) / _clickAreaSize);
+		int col = (int) ((e.getX()) / _clickAreaSize);
+		int row = (int) ((e.getY()) / _clickAreaSize);
+		System.out.println(row + ":" + col);
 		
-		_board.pick(x, y);
+		_board.pick(row, col);
 		
 		invalidate();
 		return false;
@@ -157,12 +158,12 @@ public class BoardView extends View {
 	}
 	
 	private void drawPositions(Canvas canvas) {
-		for (int i = 0; i < _positions.length; ++i) {
-			for (int j = 0; j < _positions.length; ++j) {
-				Position temp = _positions[i][j];
+		for (int row = 0; row < _positions.length; ++row) {
+			for (int col = 0; col < _positions.length; ++col) {
+				Position temp = _positions[row][col];
 				if (temp != null) {
-					float x = _boardOffset + i * _clickAreaSize;
-					float y = _boardOffset + j * _clickAreaSize;
+					float y = _boardOffset + row * _clickAreaSize;
+					float x = _boardOffset + col * _clickAreaSize;
 					if (temp.getStone() == Stone.BLACK) 
 						drawStone(canvas, x, y, _blackStone);
 					else if (temp.getStone() == Stone.WHITE)

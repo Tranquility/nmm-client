@@ -114,7 +114,7 @@ public class BoardActivity extends Activity {
 						MoveConverter mc = new MoveConverter(result);
 						
 						_board.move(mc.oldField(), mc.newField(), mc.delField());
-						_view.postInvalidate();
+						_view.invalidate();
 						
 						_timer.cancel();
 					}

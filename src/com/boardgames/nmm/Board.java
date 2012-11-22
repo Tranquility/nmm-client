@@ -124,9 +124,9 @@ public class Board {
 	 * within the array boundaries and not null and empty. THIS ONLY WORKS IN
 	 * THE FIRST PHASE.
 	 */
-	private boolean isChoiceValid(int x, int y) {
-		return x >= 0 && y >= 0 && x < _positions.length
-				&& y < _positions.length && _positions[x][y] != null;
+	private boolean isChoiceValid(int row, int col) {
+		return row >= 0 && col >= 0 && row < _positions.length
+				&& col < _positions.length && _positions[row][col] != null;
 	}
 
 	/**
@@ -149,21 +149,23 @@ public class Board {
 
 		@Override
 		public void move(int oldField, int newField, int delField) {
+			int row = 0;
+			int col = 0;
 			if (oldField >= 0) {
-				int fromX = oldField / 10;
-				int fromY = oldField % 10;
-				_positions[fromX][fromY].setStone(null);
+				row = oldField / 10;
+				col = oldField % 10;
+				_positions[row][col].setStone(null);
 			}
 
-			int toX = newField / 10;
-			int toY = newField % 10;
-			_positions[toX][toY].setStone(_opponentStone);
+			row = newField / 10;
+			col = newField % 10;
+			_positions[row][col].setStone(_opponentStone);
 
 			if (delField >= 0) {
 				_stonesOnField--;
-				int delX = delField / 10;
-				int delY = delField % 10;
-				_positions[delX][delY].setStone(null);
+				row = delField / 10;
+				col = delField % 10;
+				_positions[row][col].setStone(null);
 			}
 
 			next();
@@ -195,10 +197,10 @@ public class Board {
 		}
 
 		@Override
-		public void pick(int x, int y) {
-			if (isChoiceValid(x, y)) {
-				if (_positions[x][y].isEmpty()) {
-					int to = x * 10 + y;
+		public void pick(int row, int col) {
+			if (isChoiceValid(row, col)) {
+				if (_positions[row][col].isEmpty()) {
+					int to = row * 10 + col;
 					move(-1, to, -1);
 					// Check if Mühle, wenn nein next()
 				}
@@ -207,17 +209,17 @@ public class Board {
 
 		@Override
 		public void move(int oldField, int newField, int delField) {
-			int x = newField / 10;
-			int y = newField % 10;
-			_positions[x][y].setStone(_playerStone);
+			int row = newField / 10;
+			int col = newField % 10;
+			_positions[row][col].setStone(_playerStone);
 
 			_stonesToPlace--;
 			_stonesOnField++;
 
 			if (delField >= 0) {
-				x = delField / 10;
-				y = delField % 10;
-				_positions[x][y].setStone(null);
+				row = delField / 10;
+				col = delField % 10;
+				_positions[row][col].setStone(null);
 			}
 			next();
 
@@ -247,17 +249,17 @@ public class Board {
 		}
 
 		@Override
-		public void pick(int x, int y) {
-			if (isChoiceValid(x, y)) {
-				Position pos = _positions[x][y];
+		public void pick(int row, int col) {
+			if (isChoiceValid(row, col)) {
+				Position pos = _positions[row][col];
 				if (pos.getStone() == _playerStone) {
-					_from = x * 10 + y;
+					_from = row * 10 + col;
 				} else if (_from > -1 && pos.isEmpty()) {
-					int fromX = _from / 10;
-					int fromY = _from % 10;
+					int fromRow = _from / 10;
+					int fromCol = _from % 10;
 
-					if (_positions[fromX][fromY].isNeighbor(pos)) {
-						_to = x * 10 + y;
+					if (_positions[fromRow][fromCol].isNeighbor(pos)) {
+						_to = row * 10 + col;
 						move(_from, _to, -1);
 					}
 				}
@@ -267,13 +269,13 @@ public class Board {
 
 		@Override
 		public void move(int oldField, int newField, int delField) {
-			int x = oldField / 10;
-			int y = oldField % 10;
-			_positions[x][y].setStone(null);
+			int row = oldField / 10;
+			int col = oldField % 10;
+			_positions[row][col].setStone(null);
 
-			x = newField / 10;
-			y = newField % 10;
-			_positions[x][y].setStone(_playerStone);
+			row = newField / 10;
+			col = newField % 10;
+			_positions[row][col].setStone(_playerStone);
 
 			_to = -1;
 			_from = -1;
