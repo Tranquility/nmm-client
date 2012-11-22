@@ -8,8 +8,10 @@ public class Position {
 
     private Stone _stone = null;
 
-    public void setNeighbors(List<Position> neighbors) {
-    	_neighbors = neighbors;
+    public void setNeighbors(Position... neighbors) {
+    	for (Position p : neighbors) {
+    		_neighbors.add(p);
+    	}
     }
 
     public void setStone(Stone s) {

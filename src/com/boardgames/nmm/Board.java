@@ -94,6 +94,31 @@ public class Board {
 		g4 = new Position();
 		g7 = new Position();
 
+		a1.setNeighbors(d1, a4);
+		a4.setNeighbors(a1, b4, a7);
+		a7.setNeighbors(a4, d7);
+		b2.setNeighbors(d2, b4);
+		b4.setNeighbors(b6, c4, b2, a4);
+		b6.setNeighbors(b4, d6);
+		c3.setNeighbors(d3, c4);
+		c4.setNeighbors(c3, c5, b4);
+		c5.setNeighbors(c4, d5);
+		d1.setNeighbors(g1, d2, a1);
+		d2.setNeighbors(d1, f2, d3, b2);
+		d3.setNeighbors(d2, e3, c3);
+		d5.setNeighbors(e5, d6, c5);
+		d6.setNeighbors(d5, f6, d7, b6);
+		d7.setNeighbors(d6, g7, a1);
+		e3.setNeighbors(e4, d3);
+		e4.setNeighbors(e3, f4, e5);
+		e5.setNeighbors(e4, d5);
+		f2.setNeighbors(f4, d2);
+		f4.setNeighbors(f2, g4, f6, e4);
+		f6.setNeighbors(f4, d6);
+		g1.setNeighbors(g4, d1);
+		g4.setNeighbors(g1, g7, f4);
+		g7.setNeighbors(g4, d7);
+
 		_positions = new Position[][] { { a1, null, null, a4, null, null, a7 },
 				{ null, b2, null, b4, null, b6, null },
 				{ null, null, c3, c4, c5, null, null },
@@ -279,7 +304,7 @@ public class Board {
 
 			_to = -1;
 			_from = -1;
-			
+
 			notifyObservers(oldField, newField, delField);
 			next();
 		}
