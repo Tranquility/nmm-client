@@ -35,6 +35,7 @@ public class MainActivity extends Activity {
 		addRegisterButtonListener();
 		addStartButtonListener();
 		addLoginButtonListener();
+		addJoinGameButtonListener();
 	}
 
 	@Override
@@ -83,6 +84,21 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				Intent intent = new Intent(getApplicationContext(),
 						LoginActivity.class);
+				startActivity(intent);
+			}
+		});
+	}
+
+	/**
+	 * Adds a listener to the button that opens games activity.
+	 */
+	private void addJoinGameButtonListener() {
+		Button loginButton = (Button) findViewById(R.id.button_joinGame);
+		loginButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(getApplicationContext(),
+						gamesActivity.class);
 				startActivity(intent);
 			}
 		});
