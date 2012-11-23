@@ -98,7 +98,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(getApplicationContext(),
-						gamesActivity.class);
+						GamesActivity.class);
 				startActivity(intent);
 			}
 		});

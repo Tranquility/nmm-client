@@ -13,6 +13,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -25,6 +26,36 @@ public class NetworkManager {
 	 * @param url
 	 *            The URL where the client wants to get JSON Strings
 	 * @return A JSONArray, containing the received JSONObjects
+	 */
+	public static JSONArray getJsonArray(String url) {
+		JSONArray result = null;
+		try {
+			HttpClient client = new DefaultHttpClient();
+			HttpGet get = new HttpGet(url);
+
+			HttpResponse response = client.execute(get);
+			HttpEntity entity = response.getEntity();
+
+			InputStream content = entity.getContent();
+			InputStreamReader streamReader = new InputStreamReader(content);
+			BufferedReader bufferedReader = new BufferedReader(streamReader);
+
+			String line = bufferedReader.readLine();
+			if (!line.equals("null"))
+				result = new JSONArray(line);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	/**
+	 * Executes a GET request to a given URL and converts the InputStream to a
+	 * JSONArray.
+	 * 
+	 * @param url
+	 *            The URL where the client wants to get JSON Strings
+	 * @return A JSONObject, containing the received Data
 	 */
 	public static JSONObject getJson(String url) {
 		JSONObject result = null;
